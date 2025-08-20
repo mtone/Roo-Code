@@ -32,8 +32,8 @@ export const toolParamNames = [
 	"path",
 	"content",
 	"line_count",
-	"regex",
-	"file_pattern",
+	"content_regex",
+	"file_glob",
 	"recursive",
 	"action",
 	"url",
@@ -112,7 +112,7 @@ export interface CodebaseSearchToolUse extends ToolUse {
 
 export interface SearchFilesToolUse extends ToolUse {
 	name: "search_files"
-	params: Partial<Pick<Record<ToolParamName, string>, "path" | "regex" | "file_pattern">>
+	params: Partial<Pick<Record<ToolParamName, string>, "path" | "content_regex" | "file_glob">>
 }
 
 export interface ListFilesToolUse extends ToolUse {

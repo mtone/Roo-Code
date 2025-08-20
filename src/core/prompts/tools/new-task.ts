@@ -4,7 +4,7 @@ import { ToolArgs } from "./types"
  * Prompt when todos are NOT required (default)
  */
 const PROMPT_WITHOUT_TODOS = `## new_task
-Description: This will let you create a new task instance in the chosen mode using your provided message.
+Description: Create a new subtask instance in the chosen mode using your provided message.
 
 Parameters:
 - mode: (required) The slug of the mode to start the new task in (e.g., "code", "debug", "architect").
@@ -12,14 +12,8 @@ Parameters:
 
 Usage:
 <new_task>
-<mode>your-mode-slug-here</mode>
-<message>Your initial instructions here</message>
-</new_task>
-
-Example:
-<new_task>
-<mode>code</mode>
-<message>Implement a new feature for the application</message>
+<mode>The slug of the mode like "code", "debug", "architect" (required)</mode>
+<message>Instructions with sufficient instructions and context to independently perform and return results of a task.</message>
 </new_task>
 `
 
@@ -27,7 +21,7 @@ Example:
  * Prompt when todos ARE required
  */
 const PROMPT_WITH_TODOS = `## new_task
-Description: This will let you create a new task instance in the chosen mode using your provided message and initial todo list.
+Description: Create a new subtask instance in the chosen mode using your provided message and initial todo list.
 
 Parameters:
 - mode: (required) The slug of the mode to start the new task in (e.g., "code", "debug", "architect").
@@ -44,19 +38,6 @@ Usage:
 [ ] Third task to complete
 </todos>
 </new_task>
-
-Example:
-<new_task>
-<mode>code</mode>
-<message>Implement user authentication</message>
-<todos>
-[ ] Set up auth middleware
-[ ] Create login endpoint
-[ ] Add session management
-[ ] Write tests
-</todos>
-</new_task>
-
 `
 
 export function getNewTaskDescription(args: ToolArgs): string {

@@ -189,8 +189,8 @@ export async function presentAssistantMessage(cline: Task) {
 						}
 						return `[${block.name}]`
 					case "search_files":
-						return `[${block.name} for '${block.params.regex}'${
-							block.params.file_pattern ? ` in '${block.params.file_pattern}'` : ""
+						return `[${block.name} for '${block.params.content_regex ?? ".*"}'${
+							block.params.file_glob ? ` in '${block.params.file_glob}'` : ""
 						}]`
 					case "insert_content":
 						return `[${block.name} for '${block.params.path}']`

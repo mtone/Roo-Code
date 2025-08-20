@@ -92,92 +92,39 @@ export class MultiSearchReplaceDiffStrategy implements DiffStrategy {
 
 	getToolDescription(args: { cwd: string; toolOptions?: { [key: string]: string } }): string {
 		return `## apply_diff
-Description: Request to apply PRECISE, TARGETED modifications to an existing file by searching for specific sections of content and replacing them. This tool is for SURGICAL EDITS ONLY - specific changes to existing code.
-You can perform multiple distinct search and replace operations within a single \`apply_diff\` call by providing multiple SEARCH/REPLACE blocks in the \`diff\` parameter. This is the preferred way to make several targeted changes efficiently.
-The SEARCH section must exactly match existing content including whitespace and indentation.
-If you're not confident in the exact content to search for, use the read_file tool first to get the exact content.
-When applying the diffs, be extra careful to remember to change any closing brackets or other syntax that may be affected by the diff farther down in the file.
-ALWAYS make as many changes in a single 'apply_diff' request as possible using multiple SEARCH/REPLACE blocks
+Description: Apply modifications to an existing file by searching for specific sections of content and replacing them.
 
 Parameters:
-- path: (required) The path of the file to modify (relative to the current workspace directory ${args.cwd})
-- diff: (required) The search/replace block defining the changes.
+path (REQUIRED): relative path to file.
+diff (REQUIRED): search and replace blocks with start line.
 
-Diff format:
-\`\`\`
+Syntax:
+<apply_diff>
+<path>src/module/index.tsx</path>
+<diff><![CDATA[
 <<<<<<< SEARCH
 :start_line: (required) The line number of original content where the search block starts.
 -------
-[exact content to find including whitespace]
+[exact content of the first search block to find including whitespace]
 =======
-[new content to replace with]
+[new content to replace the first block with] 
 >>>>>>> REPLACE
-
-\`\`\`
-
-
-Example:
-
-Original file:
-\`\`\`
-1 | def calculate_total(items):
-2 |     total = 0
-3 |     for item in items:
-4 |         total += item
-5 |     return total
-\`\`\`
-
-Search/Replace content:
-\`\`\`
 <<<<<<< SEARCH
-:start_line:1
+:start_line: (required) The line number of original content where the next search block starts.
 -------
-def calculate_total(items):
-    total = 0
-    for item in items:
-        total += item
-    return total
+[exact content to the next search block to find, showcasing the possibility of doing multiple edits]
 =======
-def calculate_total(items):
-    """Calculate total with 10% markup"""
-    return sum(item * 1.1 for item in items)
+[new content to replace the next block with] 
 >>>>>>> REPLACE
+]]></diff>
+</apply_diff>
 
-\`\`\`
-
-Search/Replace content with multiple edits:
-\`\`\`
-<<<<<<< SEARCH
-:start_line:1
--------
-def calculate_total(items):
-    sum = 0
-=======
-def calculate_sum(items):
-    sum = 0
->>>>>>> REPLACE
-
-<<<<<<< SEARCH
-:start_line:4
--------
-        total += item
-    return total
-=======
-        sum += item
-    return sum 
->>>>>>> REPLACE
-\`\`\`
-
-
-Usage:
-<apply_diff>
-<path>File path here</path>
-<diff>
-Your search/replace content here
-You can use multi search/replace block in one diff block, but make sure to include the line numbers for each block.
-Only use a single line of '=======' between search and replacement content, because multiple '=======' will corrupt the file.
-</diff>
-</apply_diff>`
+Remarks:
+ - You can (and prefer to) make one or more edits to a file within a single \`apply_diff\` call by providing multiple SEARCH/REPLACE blocks in the \`diff\` parameter.
+ - The SEARCH section must exactly match existing content including whitespace and indentation.
+ - Be careful to remember to change any closing brackets or other syntax that may be affected by the diff farther down in the file.
+ - The entire diff parameter should be wrapped in CDATA open and closing tags to handle special characters.
+`
 	}
 
 	private unescapeMarkers(content: string): string {

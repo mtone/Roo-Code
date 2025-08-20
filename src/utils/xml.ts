@@ -33,12 +33,11 @@ export function parseXml(xmlString: string, stopNodes?: string[], options?: Pars
 			processEntities,
 			stopNodes: _stopNodes,
 		})
-
 		return parser.parse(xmlString)
 	} catch (error) {
 		// Enhance error message for better debugging
 		const errorMessage = error instanceof Error ? error.message : "Unknown error"
-		throw new Error(`Failed to parse XML: ${errorMessage}`)
+		throw new Error(`Failed to parse XML: ${errorMessage}\n${xmlString}`)
 	}
 }
 

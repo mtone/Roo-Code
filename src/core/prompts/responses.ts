@@ -3,6 +3,7 @@ import * as path from "path"
 import * as diff from "diff"
 import { RooIgnoreController, LOCK_TEXT_SYMBOL } from "../ignore/RooIgnoreController"
 import { RooProtectedController } from "../protect/RooProtectedController"
+import { MultiSearchReplaceDiffStrategy } from "../diff/strategies/multi-search-replace"
 
 export const formatResponse = {
 	toolDenied: () => `The user denied this operation.`,
@@ -33,8 +34,20 @@ Otherwise, if you have not completed the task and do not need additional informa
 	tooManyMistakes: (feedback?: string) =>
 		`You seem to be having trouble proceeding. The user has provided the following feedback to help guide you:\n<feedback>\n${feedback}\n</feedback>`,
 
-	missingToolParameterError: (paramName: string) =>
-		`Missing value for required parameter '${paramName}'. Please retry with complete response.\n\n${toolUseInstructionsReminder}`,
+	missingToolParameterError: (paramName: string, toolName?: string) => {
+		let msg = `Missing value for required parameter '${paramName}'. Please retry with complete response.\n`
+		switch (toolName) {
+			case "apply_diff": {
+				const tool = new MultiSearchReplaceDiffStrategy()
+				msg += tool.getToolDescription({ cwd: "" })
+				break
+			}
+			default:
+				msg += `\n${toolUseInstructionsReminder}`
+				break
+		}
+		return msg
+	},
 
 	lineCountTruncationError: (actualLineCount: number, isNewFile: boolean, diffStrategyEnabled: boolean = false) => {
 		const truncationMessage = `Note: Your response may have been truncated because it exceeded your output limit. You wrote ${actualLineCount} lines of content, but the line_count parameter was either missing or not included in your response.`
@@ -158,9 +171,9 @@ Otherwise, if you have not completed the task and do not need additional informa
 		if (didHitLimit) {
 			return `${rooIgnoreParsed.join(
 				"\n",
-			)}\n\n(File list truncated. Use list_files on specific subdirectories if you need to explore further.)`
+			)}\n\n(Folder list truncated and incomplete. Use search_files or list_files on specific subdirectories if you need to explore further.)`
 		} else if (rooIgnoreParsed.length === 0 || (rooIgnoreParsed.length === 1 && rooIgnoreParsed[0] === "")) {
-			return "No files found."
+			return "No folders found."
 		} else {
 			return rooIgnoreParsed.join("\n")
 		}

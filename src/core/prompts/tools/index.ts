@@ -149,7 +149,7 @@ export function getToolDescriptionsForMode(
 		})
 	})
 
-	return `# Tools\n\n${descriptions.filter(Boolean).join("\n\n")}`
+	return `# Available XML tools\n\n${descriptions.filter(Boolean).join("\n\n")}`
 }
 
 // Export individual description functions for backward compatibility

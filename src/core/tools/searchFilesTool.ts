@@ -16,8 +16,8 @@ export async function searchFilesTool(
 	removeClosingTag: RemoveClosingTag,
 ) {
 	const relDirPath: string | undefined = block.params.path
-	const regex: string | undefined = block.params.regex
-	const filePattern: string | undefined = block.params.file_pattern
+	const regex: string | undefined = block.params.content_regex
+	const filePattern: string | undefined = block.params.file_glob
 
 	const absolutePath = relDirPath ? path.resolve(cline.cwd, relDirPath) : cline.cwd
 	const isOutsideWorkspace = isPathOutsideWorkspace(absolutePath)
@@ -25,8 +25,8 @@ export async function searchFilesTool(
 	const sharedMessageProps: ClineSayTool = {
 		tool: "searchFiles",
 		path: getReadablePath(cline.cwd, removeClosingTag("path", relDirPath)),
-		regex: removeClosingTag("regex", regex),
-		filePattern: removeClosingTag("file_pattern", filePattern),
+		regex: removeClosingTag("content_regex", regex),
+		filePattern: removeClosingTag("file_glob", filePattern),
 		isOutsideWorkspace,
 	}
 
@@ -43,19 +43,20 @@ export async function searchFilesTool(
 				return
 			}
 
-			if (!regex) {
-				cline.consecutiveMistakeCount++
-				cline.recordToolError("search_files")
-				pushToolResult(await cline.sayAndCreateMissingParamError("search_files", "regex"))
-				return
-			}
+			//regex ??= ".*";
+			// if (!regex) {
+			// 	cline.consecutiveMistakeCount++
+			// 	cline.recordToolError("search_files")
+			// 	pushToolResult(await cline.sayAndCreateMissingParamError("search_files", "regex"))
+			// 	return
+			// }
 
 			cline.consecutiveMistakeCount = 0
 
 			const results = await regexSearchFiles(
 				cline.cwd,
 				absolutePath,
-				regex,
+				regex ?? ".*",
 				filePattern,
 				cline.rooIgnoreController,
 			)

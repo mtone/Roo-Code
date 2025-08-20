@@ -157,13 +157,13 @@ export async function applyDiffTool(
 
 Expected structure:
 <args>
-  <file>
-    <path>relative/path/to/file.ext</path>
-    <diff>
-      <content>diff content here</content>
-      <start_line>line number</start_line>
-    </diff>
-  </file>
+<file>
+<path>(REQUIRED!) relative path to file</path>
+<diff>
+<content><![CDATA[diff content block]]</content>
+<start_line>line number</start_line>
+</diff>
+</file>
 </args>
 
 Original error: ${errorMessage}`

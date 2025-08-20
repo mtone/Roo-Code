@@ -57,7 +57,9 @@ export async function applyDiffToolLegacy(
 			if (!relPath) {
 				cline.consecutiveMistakeCount++
 				cline.recordToolError("apply_diff")
-				pushToolResult(await cline.sayAndCreateMissingParamError("apply_diff", "path"))
+				pushToolResult(
+					await cline.sayAndCreateMissingParamError("apply_diff", "path", undefined, JSON.stringify(block)),
+				)
 				return
 			}
 
