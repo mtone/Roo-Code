@@ -2,38 +2,26 @@ import { ToolArgs } from "./types"
 
 export function getSearchAndReplaceDescription(args: ToolArgs): string {
 	return `## search_and_replace
-Description: Use this tool to find and replace specific text strings or patterns (using regex) within a file. It's suitable for targeted replacements across multiple locations within the file. Supports literal text and regex patterns, case sensitivity options, and optional line ranges. Shows a diff preview before applying changes.
+Description: Find and replace all occurences of a specific text string or regex pattern in a file.
 
-Required Parameters:
-- path: The path of the file to modify (relative to the current workspace directory ${args.cwd.toPosix()})
-- search: The text or pattern to search for
-- replace: The text to replace matches with
+Parameters:
+- path (REQUIRED): relative path to file.
+- search (REQUIRED): the text or rust regex pattern to search for.
+- replace (REQUIRED): the text to replace matches with.
+- use_regex (optional): true or false according to search pattern.
+- ignore_case (optional): true or false.
+- start_line (optional): starting line number (1-based) for restricted replacement.
+- end_line (optional): ending line number (1-based) for restricted replacement.
 
-Optional Parameters:
-- start_line: Starting line number for restricted replacement (1-based)
-- end_line: Ending line number for restricted replacement (1-based)
-- use_regex: Set to "true" to treat search as a regex pattern (default: false)
-- ignore_case: Set to "true" to ignore case when matching (default: false)
-
-Notes:
-- When use_regex is true, the search parameter is treated as a regular expression pattern
-- When ignore_case is true, the search is case-insensitive regardless of regex mode
-
-Examples:
-
-1. Simple text replacement:
+Syntax:
 <search_and_replace>
-<path>example.ts</path>
-<search>oldText</search>
-<replace>newText</replace>
+<path>src/module.index.tsx</path>
+<search>The text or rust regex pattern to search for</search>
+<replace>The text to replace matches with</replace>
+<use_regex>true or false</use_regex>
+<ignore_case>true or false</ignore_case>
+<start_line>Start line</start_line>
+<end_line>Ending line</end_line>
 </search_and_replace>
-
-2. Case-insensitive regex pattern:
-<search_and_replace>
-<path>example.ts</path>
-<search>old\w+</search>
-<replace>new$&</replace>
-<use_regex>true</use_regex>
-<ignore_case>true</ignore_case>
-</search_and_replace>`
+`
 }

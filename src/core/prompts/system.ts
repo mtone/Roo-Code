@@ -90,8 +90,6 @@ async function generatePrompt(
 
 	const basePrompt = `${roleDefinition}
 
-${markdownFormattingSection()}
-
 ${getSharedToolUseSection()}
 
 ${getToolDescriptionsForMode(
@@ -110,13 +108,13 @@ ${getToolDescriptionsForMode(
 	modelId,
 )}
 
+${markdownFormattingSection()}
+
 ${getToolUseGuidelinesSection(codeIndexManager)}
 
 ${mcpServersSection}
 
 ${getCapabilitiesSection(cwd, supportsComputerUse, shouldIncludeMcp ? mcpHub : undefined, effectiveDiffStrategy, codeIndexManager)}
-
-${modesSection}
 
 ${getRulesSection(cwd, supportsComputerUse, effectiveDiffStrategy, codeIndexManager)}
 

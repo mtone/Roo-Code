@@ -1040,14 +1040,16 @@ export class Task extends EventEmitter<TaskEvents> implements TaskLike {
 		}
 	}
 
-	async sayAndCreateMissingParamError(toolName: ToolName, paramName: string, relPath?: string) {
+	async sayAndCreateMissingParamError(toolName: ToolName, paramName: string, relPath?: string, block?: string) {
+		console.dir(block)
 		await this.say(
 			"error",
 			`Roo tried to use ${toolName}${
 				relPath ? ` for '${relPath.toPosix()}'` : ""
-			} without value for required parameter '${paramName}'. Retrying...`,
+			} without value for required parameter '${paramName}'. Retrying...
+			\n${block}`,
 		)
-		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName))
+		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName, toolName))
 	}
 
 	// Start / Abort / Resume

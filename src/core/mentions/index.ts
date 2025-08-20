@@ -129,9 +129,7 @@ export async function parseMentions(
 			return `'${mention}' (see below for site content)`
 		} else if (mention.startsWith("/")) {
 			const mentionPath = mention.slice(1)
-			return mentionPath.endsWith("/")
-				? `'${mentionPath}' (see below for folder content)`
-				: `'${mentionPath}' (see below for file content)`
+			return mentionPath.endsWith("/") ? `'${mentionPath}' (see below for folder content)` : `'${mentionPath}'` // (see below for file content)`
 		} else if (mention === "problems") {
 			return `Workspace Problems (see below for diagnostics)`
 		} else if (mention === "git-changes") {
@@ -198,10 +196,11 @@ export async function parseMentions(
 				if (mention.endsWith("/")) {
 					parsedText += `\n\n<folder_content path="${mentionPath}">\n${content}\n</folder_content>`
 				} else {
-					parsedText += `\n\n<file_content path="${mentionPath}">\n${content}\n</file_content>`
-					if (fileContextTracker) {
-						await fileContextTracker.trackFileContext(mentionPath, "file_mentioned")
-					}
+					// Don't include mentioned file contents, LLM almost always re-reads it anyway.
+					// parsedText += `\n\n<file_content path="${mentionPath}">\n${content}\n</file_content>`
+					// if (fileContextTracker) {
+					// 	await fileContextTracker.trackFileContext(mentionPath, "file_mentioned")
+					// }
 				}
 			} catch (error) {
 				if (mention.endsWith("/")) {

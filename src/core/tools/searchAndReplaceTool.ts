@@ -28,11 +28,12 @@ async function validateParams(
 	search: string | undefined,
 	replace: string | undefined,
 	pushToolResult: PushToolResult,
+	block?: string,
 ): Promise<boolean> {
 	if (!relPath) {
 		cline.consecutiveMistakeCount++
 		cline.recordToolError("search_and_replace")
-		pushToolResult(await cline.sayAndCreateMissingParamError("search_and_replace", "path"))
+		pushToolResult(await cline.sayAndCreateMissingParamError("search_and_replace", "path", undefined, block))
 		return false
 	}
 
@@ -97,7 +98,7 @@ export async function searchAndReplaceTool(
 		}
 
 		// Validate required parameters
-		if (!(await validateParams(cline, relPath, search, replace, pushToolResult))) {
+		if (!(await validateParams(cline, relPath, search, replace, pushToolResult, JSON.stringify(block)))) {
 			return
 		}
 
@@ -278,4 +279,12 @@ export async function searchAndReplaceTool(
  */
 function escapeRegExp(input: string): string {
 	return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+function prettyStringifyObject(obj: Record<any, any>) {
+	let result = ""
+	for (const key in obj) {
+		result = `${result}${result !== "" ? ", " : ""}${key}: ${Array.isArray(obj[key]) ? `[${obj[key]}]` : obj[key]}`
+	}
+	return `{${result}}`
 }

@@ -129,8 +129,16 @@ export function getToolDescriptionsForMode(
 		tools.delete("update_todo_list")
 	}
 
+	const sortedTools = [...tools]
+	sortedTools.sort((a, b) => {
+		if (a == "apply_diff") {
+			return -1
+		}
+		return 0
+	})
+
 	// Map tool descriptions for allowed tools
-	const descriptions = Array.from(tools).map((toolName) => {
+	const descriptions = sortedTools.map((toolName) => {
 		const descriptionFn = toolDescriptionMap[toolName]
 		if (!descriptionFn) {
 			return undefined
@@ -142,7 +150,7 @@ export function getToolDescriptionsForMode(
 		})
 	})
 
-	return `# Tools\n\n${descriptions.filter(Boolean).join("\n\n")}`
+	return `# Available XML tools\n\n${descriptions.filter(Boolean).join("\n\n")}`
 }
 
 // Export individual description functions for backward compatibility
